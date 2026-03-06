@@ -1,0 +1,128 @@
+@import url('variables.css');
+
+/* --- INNOVATIVE CORE EFFECTS --- */
+
+:root {
+    --bg-mesh: radial-gradient(at 0% 0%, rgba(153, 206, 211, 0.15) 0, transparent 50%), 
+               radial-gradient(at 100% 100%, rgba(166, 117, 125, 0.1) 0, transparent 50%);
+}
+
+body {
+    background: var(--cream);
+    background-image: var(--bg-mesh);
+    background-attachment: fixed;
+}
+
+/* Artistic Mask Reveal */
+.mask-reveal {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1.5s var(--ease-out-expo);
+}
+.mask-reveal.active {
+    clip-path: inset(0 0 0 0);
+}
+
+/* Smooth Staggered Reveal */
+.reveal {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(30px) scale(0.98);
+    transition: opacity 1.2s var(--ease-out-expo), 
+                transform 1.2s var(--ease-out-expo), 
+                filter 1.2s var(--ease-out-expo);
+}
+
+.reveal.active {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+}
+
+/* Floating Animation */
+@keyframes floating {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(1deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.float-element {
+    animation: floating 6s ease-in-out infinite;
+}
+
+/* Magnetic Button Interaction */
+.btn-magnetic {
+    position: relative;
+    transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s ease;
+}
+
+.btn-magnetic:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px -10px rgba(30, 43, 62, 0.2);
+}
+
+/* Text Marquee */
+.marquee-container {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    padding: 2rem 0;
+}
+
+.marquee-content {
+    display: inline-block;
+    animation: marquee 30s linear infinite;
+    font-size: 8vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(30, 43, 62, 0.1);
+    font-family: var(--font-serif);
+    font-style: italic;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Header Glassmorphism on Scroll */
+header.scrolled {
+    height: 70px !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(20px) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important;
+}
+
+header.scrolled #header-logo {
+    height: 40px !important;
+}
+
+/* Custom Gallery Interaction */
+.gallery-item {
+    border-radius: 3rem;
+    overflow: hidden;
+    position: relative;
+    transition: var(--transition-mid);
+}
+
+.gallery-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent, rgba(30,43,62,0.1));
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.gallery-item:hover::after {
+    opacity: 0;
+}
+
+/* Parallax Blobs */
+.blob {
+    position: absolute;
+    z-index: -1;
+    filter: blur(80px);
+    border-radius: 50%;
+    opacity: 0.4;
+}

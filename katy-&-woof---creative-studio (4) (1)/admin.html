@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier Command Center v5.7 | Katy & Woof</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body min-h-screen">
+    <div id="loading-screen" class="loading-overlay" style="position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1rem;">
+        <div class="spinner" style="width: 40px; height: 40px; border: 4px solid var(--soft-blue); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <p class="text-[10px] font-black uppercase tracking-widest">Sincronizando Atelier...</p>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+    <div id="login-portal" class="fixed inset-0 z-[1000] flex items-center justify-center p-6 bg-cream">
+        <div class="max-w-md w-full glass-card p-12 rounded-[3rem] text-center shadow-2xl">
+            <h1 class="text-3xl serif font-bold mb-8">Atelier Login</h1>
+            <input type="password" id="auth-input" placeholder="Clave de Acceso" class="form-input text-center mb-4 tracking-widest font-bold">
+            <button onclick="AdminUI.attemptAuth()" class="w-full py-5 btn-magic rounded-2xl font-black uppercase text-[10px] tracking-widest">Entrar</button>
+        </div>
+    </div>
+
+    <main id="admin-content" class="hidden max-w-7xl mx-auto p-6 md:p-12 opacity-0 transition-opacity duration-700">
+        <header class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+            <div><h1 class="text-4xl serif font-bold">Command Center v5.7</h1><p class="text-stone-400 text-xs uppercase tracking-widest font-bold mt-1">Gestión Pet Studio</p></div>
+            <nav class="flex bg-white/50 p-1 rounded-2xl shadow-sm border border-stone-100 flex-wrap justify-center">
+                <button onclick="AdminUI.switchTab('identity')" class="tab-btn active px-4 py-3 text-[9px] font-black uppercase tracking-widest" data-tab="identity">Identidad</button>
+                <button onclick="AdminUI.switchTab('visuals')" class="tab-btn px-4 py-3 text-[9px] font-black uppercase tracking-widest" data-tab="visuals">Visuales</button>
+                <button onclick="AdminUI.switchTab('portfolio')" class="tab-btn px-4 py-3 text-[9px] font-black uppercase tracking-widest" data-tab="portfolio">Portafolio</button>
+                <button onclick="AdminUI.switchTab('services')" class="tab-btn px-4 py-3 text-[9px] font-black uppercase tracking-widest" data-tab="services">Servicios</button>
+                <button onclick="AdminUI.switchTab('proceso')" class="tab-btn px-4 py-3 text-[9px] font-black uppercase tracking-widest" data-tab="proceso">Proceso</button>
+                <button onclick="AdminUI.switchTab('blog')" class="tab-btn px-4 py-3 text-[9px] font-black uppercase tracking-widest" data-tab="blog">Blog</button>
+                <button onclick="AdminUI.switchTab('settings')" class="tab-btn px-4 py-3 text-[9px] font-black uppercase tracking-widest" data-tab="settings">Textos</button>
+            </nav>
+        </header>
+
+        <!-- Identity Tab -->
+        <div id="tab-identity" class="tab-content">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="glass-card p-10 rounded-[3rem] space-y-6">
+                    <h2 class="text-xl serif font-bold border-b border-stone-100 pb-4">Branding Visual</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2 text-center">
+                            <div class="h-24 bg-stone-50 rounded-xl flex items-center justify-center p-2"><img id="preview-logo" class="max-h-full object-contain"></div>
+                            <input type="file" id="site-logo-input" class="text-[9px]" accept="image/*">
+                        </div>
+                        <div class="space-y-2 text-center">
+                            <div class="h-24 bg-stone-50 rounded-xl flex items-center justify-center"><img id="preview-favicon" class="w-8 h-8"></div>
+                            <input type="file" id="site-favicon-input" class="text-[9px]" accept="image/*">
+                        </div>
+                    </div>
+                    <button onclick="AdminTaxonomy.saveIdentity()" class="w-full py-4 btn-magic rounded-xl font-bold uppercase text-[10px]">Actualizar Marca</button>
+                </div>
+                <div class="glass-card p-10 rounded-[3rem] space-y-4">
+                    <h2 class="text-xl serif font-bold border-b border-stone-100 pb-4">Datos de Contacto</h2>
+                    <input type="email" id="id-contact_email" class="form-input" placeholder="Email Corporativo">
+                    <input type="text" id="id-contact_whatsapp" class="form-input" placeholder="WhatsApp (+34...)">
+                    <input type="text" id="id-contact_address" class="form-input" placeholder="Ubicación">
+                    <button onclick="AdminTaxonomy.saveIdentity()" class="w-full py-4 border-2 border-stone-800 text-stone-800 rounded-xl font-bold uppercase text-[10px]">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visuals Tab -->
+        <div id="tab-visuals" class="tab-content hidden">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="glass-card p-10 rounded-[3rem] space-y-6">
+                    <h2 class="text-xl serif font-bold border-b border-stone-100 pb-4">Home Hero</h2>
+                    <input type="text" id="id-hero_title" class="form-input" placeholder="Título Hero">
+                    <textarea id="id-hero_description" class="form-input" rows="3" placeholder="Descripción Hero"></textarea>
+                    <div class="space-y-2">
+                        <div class="h-32 bg-stone-50 rounded-xl flex items-center justify-center p-2 overflow-hidden"><img id="preview-hero_image" class="max-w-full h-full object-cover"></div>
+                        <input type="file" id="hero-image-input" class="text-[9px]" accept="image/*">
+                    </div>
+                </div>
+                <div class="glass-card p-10 rounded-[3rem] space-y-6">
+                    <h2 class="text-xl serif font-bold border-b border-stone-100 pb-4">Sección Nosotros</h2>
+                    <input type="text" id="id-nosotros_title" class="form-input" placeholder="Título Nosotros">
+                    <div class="space-y-2">
+                        <div class="h-32 bg-stone-50 rounded-xl flex items-center justify-center p-2 overflow-hidden"><img id="preview-nosotros_image" class="max-w-full h-full object-cover"></div>
+                        <input type="file" id="nosotros-image-input" class="text-[9px]" accept="image/*">
+                    </div>
+                </div>
+            </div>
+            <button onclick="AdminTaxonomy.saveIdentity()" class="w-full mt-8 py-5 btn-magic rounded-xl font-bold uppercase text-[10px]">Guardar Cambios Visuales</button>
+        </div>
+
+        <!-- Portafolio Tab -->
+        <div id="tab-portfolio" class="tab-content hidden">
+            <div class="grid lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-1 space-y-8">
+                    <div id="portfolio-form-container" class="glass-card p-8 rounded-[2.5rem] transition-all duration-500">
+                        <h2 id="portfolio-title-form" class="text-xl serif font-bold mb-6">Archivar Obra</h2>
+                        <form id="portfolio-form" class="space-y-4">
+                            <input type="hidden" id="art-id">
+                            <input type="text" id="art-name" placeholder="Nombre de la mascota" class="form-input">
+                            <select id="art-style" class="form-input"></select>
+                            <input type="file" id="art-file" class="form-input" accept="image/*">
+                            <div class="flex flex-col gap-2">
+                                <button type="button" id="art-submit-btn" onclick="AdminContent.savePortfolio()" class="w-full py-4 btn-magic rounded-xl font-bold uppercase text-[10px]">Subir al Archivo</button>
+                                <button type="button" id="art-cancel-btn" onclick="AdminContent.cancelEdit('portfolio')" class="hidden w-full py-3 bg-stone-100 text-stone-500 rounded-xl font-bold uppercase text-[9px]">Cancelar Edición</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-[2.5rem] bg-stone-50/50">
+                        <h3 class="text-[10px] font-black uppercase tracking-widest mb-6 text-stone-500">Gestión de Estilos</h3>
+                        <div class="space-y-4">
+                            <input type="text" id="new-art_styles" class="form-input text-xs py-3" placeholder="Nuevo estilo...">
+                            <button onclick="AdminTaxonomy.addListItem('art_styles')" class="w-full py-3 bg-midnight text-white rounded-xl font-bold uppercase text-[9px]">Añadir Estilo</button>
+                        </div>
+                        <div id="list-art_styles" class="mt-6 space-y-2 max-h-48 overflow-y-auto"></div>
+                    </div>
+                </div>
+                <div id="portfolio-list" class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:col-span-2"></div>
+            </div>
+        </div>
+
+        <!-- Servicios Tab -->
+        <div id="tab-services" class="tab-content hidden">
+            <div class="grid lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-1 space-y-8">
+                    <div id="services-form-container" class="glass-card p-8 rounded-[2.5rem] transition-all duration-500">
+                        <h2 id="service-title-form" class="text-xl serif font-bold mb-6">Nuevo Servicio</h2>
+                        <form id="service-form" class="space-y-4">
+                            <input type="hidden" id="service-id">
+                            <input type="text" id="service-title" placeholder="Título" class="form-input">
+                            <select id="service-category" class="form-input"></select>
+                            <textarea id="service-desc" rows="4" placeholder="Descripción" class="form-input"></textarea>
+                            <input type="file" id="service-file" class="form-input" accept="image/*">
+                            <div class="flex flex-col gap-2">
+                                <button type="button" id="service-submit-btn" onclick="AdminContent.saveService()" class="w-full py-4 btn-magic rounded-xl font-bold uppercase text-[10px]">Publicar Servicio</button>
+                                <button type="button" id="service-cancel-btn" onclick="AdminContent.cancelEdit('services')" class="hidden w-full py-3 bg-stone-100 text-stone-500 rounded-xl font-bold uppercase text-[9px]">Cancelar Edición</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-[2.5rem] bg-stone-50/50">
+                        <h3 class="text-[10px] font-black uppercase tracking-widest mb-6 text-stone-500">Categorías de Servicio</h3>
+                        <div class="space-y-4">
+                            <input type="text" id="new-service_categories" class="form-input text-xs py-3" placeholder="Nueva categoría...">
+                            <button onclick="AdminTaxonomy.addListItem('service_categories')" class="w-full py-3 bg-midnight text-white rounded-xl font-bold uppercase text-[9px]">Guardar Categoría</button>
+                        </div>
+                        <div id="list-service_categories" class="mt-6 space-y-2 max-h-48 overflow-y-auto"></div>
+                    </div>
+                </div>
+                <div id="services-list" class="space-y-2 lg:col-span-2"></div>
+            </div>
+        </div>
+
+        <!-- Blog Tab -->
+        <div id="tab-blog" class="tab-content hidden">
+            <div class="grid lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-1 space-y-8">
+                    <div id="blog-form-container" class="glass-card p-8 rounded-[2.5rem] transition-all duration-500">
+                        <h2 id="blog-title-form" class="text-xl serif font-bold mb-6">Nueva Historia</h2>
+                        <form id="blog-form" class="space-y-4">
+                            <input type="hidden" id="blog-id">
+                            <input type="text" id="blog-title" placeholder="Título" class="form-input">
+                            <select id="blog-category" class="form-input"></select>
+                            <textarea id="blog-content" rows="6" placeholder="Contenido" class="form-input"></textarea>
+                            <input type="file" id="blog-file" class="form-input" accept="image/*">
+                            <div class="flex flex-col gap-2">
+                                <button type="button" id="blog-submit-btn" onclick="AdminContent.saveBlog()" class="w-full py-4 btn-magic rounded-xl font-bold uppercase text-[10px]">Publicar en Blog</button>
+                                <button type="button" id="blog-cancel-btn" onclick="AdminContent.cancelEdit('blog')" class="hidden w-full py-3 bg-stone-100 text-stone-500 rounded-xl font-bold uppercase text-[9px]">Cancelar Edición</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-[2.5rem] bg-stone-50/50">
+                        <h3 class="text-[10px] font-black uppercase tracking-widest mb-6 text-stone-500">Temas del Blog</h3>
+                        <div class="space-y-4">
+                            <input type="text" id="new-blog_categories" class="form-input text-xs py-3" placeholder="Nuevo tema...">
+                            <button onclick="AdminTaxonomy.addListItem('blog_categories')" class="w-full py-3 bg-midnight text-white rounded-xl font-bold uppercase text-[9px]">Añadir Tema</button>
+                        </div>
+                        <div id="list-blog_categories" class="mt-6 space-y-2 max-h-48 overflow-y-auto"></div>
+                    </div>
+                </div>
+                <div id="blog-list" class="space-y-2 lg:col-span-2"></div>
+            </div>
+        </div>
+
+        <!-- Proceso Tab -->
+        <div id="tab-proceso" class="tab-content hidden">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div id="proceso-form-container" class="glass-card p-8 rounded-[2.5rem]">
+                    <h2 id="proceso-title-form" class="text-xl serif font-bold mb-6">Paso del Proceso</h2>
+                    <form id="process-form" class="space-y-4">
+                        <input type="hidden" id="process-id">
+                        <input type="number" id="step-number" placeholder="Orden" class="form-input">
+                        <input type="text" id="step-title" placeholder="Título" class="form-input">
+                        <textarea id="step-description" rows="3" placeholder="Descripción" class="form-input"></textarea>
+                        <input type="file" id="step-file" class="form-input" accept="image/*">
+                        <div class="flex flex-col gap-2">
+                            <button type="button" id="process-submit-btn" onclick="AdminContent.saveProcessStep()" class="w-full py-4 btn-magic rounded-xl font-bold uppercase text-[10px]">Guardar Paso</button>
+                            <button type="button" id="process-cancel-btn" onclick="AdminContent.cancelEdit('proceso')" class="hidden w-full py-3 bg-stone-100 text-stone-500 rounded-xl font-bold uppercase text-[9px]">Cancelar Edición</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="process-list" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <div id="tab-settings" class="tab-content hidden"><div class="max-w-2xl mx-auto glass-card p-10 rounded-[3rem] text-center"><h2 class="text-xl serif font-bold mb-8">Nuestra Historia</h2><form id="settings-form" class="space-y-6"><textarea id="setting-our_history" rows="6" class="form-input"></textarea><button type="button" onclick="AdminTaxonomy.saveSettings()" class="w-full py-4 btn-magic rounded-xl font-bold uppercase text-[10px]">Actualizar Textos</button></form></div></div>
+    </main>
+
+    <div id="toast" class="px-8 py-4 bg-midnight text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl">Operación Exitosa</div>
+
+    <script src="admin-api.js"></script>
+    <script src="admin-ui.js"></script>
+    <script src="admin-content.js"></script>
+    <script src="admin-taxonomy.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('kw_admin') === 'ok') AdminUI.unlock();
+        });
+    </script>
+</body>
+</html>

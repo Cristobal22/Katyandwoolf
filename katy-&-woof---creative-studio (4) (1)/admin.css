@@ -1,0 +1,65 @@
+@import url('variables.css');
+
+.admin-body {
+    background-color: var(--cream);
+    color: var(--midnight);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.tab-btn {
+    transition: var(--transition-mid);
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+    border-color: var(--midnight);
+    color: var(--midnight);
+    font-weight: 900;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1.25rem;
+    border-radius: 1.25rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus {
+    border-color: var(--soft-blue);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(153, 206, 211, 0.1);
+}
+
+.btn-magic {
+    background: linear-gradient(135deg, var(--midnight), var(--midnight-light));
+    color: white;
+    transition: var(--transition-mid);
+    cursor: pointer;
+}
+
+.btn-magic:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px -5px rgba(30, 43, 62, 0.2);
+}
+
+#toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2000;
+}
+
+#toast.active {
+    transform: translateX(-50%) translateY(0);
+}
